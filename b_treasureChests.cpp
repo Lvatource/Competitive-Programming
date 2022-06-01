@@ -12,34 +12,32 @@ using namespace std;
 #define ll long long
 #define vvi vector<vi>
 
-vvi graph(1e6);
-vector<bool> check(1e6, false);
+vi a;
+vector<bool> check;
+int count = 0;
 void dfs(int cur) {
 	if (check[cur]) {
+		count++;
 		return;
 	}
 	check[cur] = true;
-	for (int nei : graph[cur]) {
-		dfs(nei);
-	}
+	dfs(a[i]);
 }
 
 int main()
 {
 	int N, cur;
 	cin >> N;
+	check.resize(N, false);
 	for (int i = 0; i < N; i++) {
 		cin >> cur;
-		cur--;
-		graph[cur].pb(i);
-		graph[i].pb(cur);
+		a.pb(cur);
+		check.pb(false);
 	}
-	cur = 0;
 	for (int i = 0; i < N; i++) {
 		if (!check[i]) {
 			dfs(i);
-			cur++;
 		}
 	}
-	cout << cur << endl;
+	cout << count << endl;
 }

@@ -5,49 +5,53 @@
 #include <utility>
 #include <set>
 #include <string>
+#include <queue>
+#include <tuple>
 using namespace std;
 
 #define vi vector<int>
+#define vb vector<bool>
 #define pb push_back
 #define ll long long
+#define vvi vector<vi>
+#define pii pair<int, int>
+#define mp make_pair
+#define vvpii vector<vector<pii>>
+#define all(x) x.begin(), x.end()
+const int INF = 2e18, MOD = 1e9 + 7;
 
-
-int main()
-{
-	int N, a, b;
-	cin >> N;
-	vi judges(N + 1, 0);
-	vector<pair<int, int>> bitcoin(N);
-	int pointer = 0;
-	int paid = 0;
-	for (int i = 0; i < N; i++) {
-		cin >> a;
-		judges[a]++;
-		cin >> b;
-		bitcoin[i].first = a;
-		bitcoin[i].second = b;
+int main() {
+	int n, y = 0;
+	ll sum = 0;
+	cin >> n;
+	vvi A(n + 1);
+	int a, b;
+	for (int i = 0; i < n; i++) {
+		cin >> a >> b;
+		A[a].pb(b);
 	}
-	sort(bitcoin.begin(), bitcoin.end());
-	int moves = 0;
-	while (pointer < N) {
-		moves += judges[pointer];
-		if (moves > 0) {
-			moves--;
-			pointer++;
+	vi z(n + 1);
+	z[0] = 0;
+	for (int i = 1; i <= n; i++) {
+		z[i] = z[i - 1] + A[i - 1].size();
+	}
+	int cnt = 0;
+	multiset<int> ms;
+	for (int j = n; j >= 0; j--) {
+		cnt = 0;
+		for (int i = 0; i < A[j].size(); i++) {
+			ms.insert(A[j][i]);
 		}
-		else {
-			int min = bitcoin[N - 1].second;
-			int am = bitcoin[N - 1].first;
-			int index = N - 1;
-			while (bitcoin[index].first == am) {
-				if (bitcoin[index].second < min) {
-					min = bitcoin[index].second;
-				}
-				index--;
+		for (int i = 0; i < j - (y + z[j]); i++) {
+			if (!ms.empty()) {
+				int minimum = *ms.begin();
+				sum += minimum;
+				cnt++;
+				ms.erase(ms.begin());
 			}
-			paid += min;
-			pointer++;
 		}
+		y += cnt;
 	}
-	cout << paid << endl;
+	cout << sum << endl;
+	return 0;
 }
